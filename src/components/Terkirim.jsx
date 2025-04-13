@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import Navbar from "./Navbar";
 
 const Terkirim = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
-      <Navbar />
       <div className="container mx-auto mt-10 p-10 bg-white rounded-2xl shadow-lg w-full max-w-4xl">
         <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8 py-20">
           <div className="flex flex-col w-full md:w-1/3 space-y-4 items-center">
