@@ -1,0 +1,57 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Deploy Using SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Change to the project directory
+            cd fe
+
+            # Stash any local changes
+            git stash
+
+            # Pull the latest changes from the main branch
+            git pull origin main
+
+            # If there were any stashed changes, pop them back (optional)
+            git stash pop || echo "No stashed changes to apply."
+
+            # Show the current status of the repository
+            git status
+
+            # Install project dependencies
+            npm install
+
+            # Build the project
+            npm run build
+
+            # Install PM2 globally if it's not already installed
+            if ! command -v pm2 >/dev/null; then
+              npm install -g pm2
+            fi
+
+            # Reload the application using PM2, or start it if it doesn't exist
+            pm2 describe Singalam-FE >/dev/null 2>&1 && pm2 restart Singalam-FE || pm2 start npm --name "Singalam-FE" -- run preview -- --port 6833
+
+            # Show the current list of PM2 processes
+            echo "PM2 processes:"
+            pm2 list
+
+            # List the contents of the current directory for debugging
+            ls -la
