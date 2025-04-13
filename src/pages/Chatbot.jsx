@@ -2,12 +2,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { FaPaperPlane } from "react-icons/fa";
+import voice from "../../public/images/voice.svg";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loadingDots, setLoadingDots] = useState("");
   const [isWaiting, setIsWaiting] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
 
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
@@ -16,6 +26,12 @@ const Chatbot = () => {
     const htmlContent = marked.parse(content);
     return { __html: DOMPurify.sanitize(htmlContent) };
   };
+
+  useEffect(() => {
+    if (transcript) {
+      setInput(transcript);
+    }
+  }, [transcript]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,6 +47,26 @@ const Chatbot = () => {
       setLoadingDots("");
     }
   }, [isWaiting]);
+
+  const handleVoiceInput = () => {
+    if (!browserSupportsSpeechRecognition) {
+      alert('Browser tidak mendukung speech recognition.');
+      return;
+    }
+  
+    if (!listening) {
+      resetTranscript();
+      SpeechRecognition.startListening({ 
+        continuous: true,
+        interimResults: true,
+        language: 'id-ID' 
+      });
+      setIsListening(true);
+    } else {
+      SpeechRecognition.stopListening();
+      setIsListening(false);
+    }
+  };  
 
   const handleSend = async (message = input) => {
     if (message.trim()) {
@@ -118,6 +154,16 @@ const Chatbot = () => {
             
             <div className="w-full max-w-xl">
               <div className="flex items-center bg-gray-100 rounded-full p-3 mb-6">
+                <button 
+                  onClick={handleVoiceInput} 
+                  className={`ml-2 p-0 rounded-full ${isListening ? 'bg-blue-500' : ''}`}
+                >
+                  <img 
+                    src={voice}
+                    alt="voice"
+                    className={`w-8 h-8 ${isListening ? 'animate-pulse' : ''}`}
+                  />
+                </button>
                 <input
                   type="text"
                   placeholder="Tanya MalangBot"
@@ -175,20 +221,30 @@ const Chatbot = () => {
         {/* Input field always at bottom when there are messages */}
         {messages.length > 0 && (
           <div className="sticky bottom-0 bg-white py-4">
-            <div className="flex items-center bg-gray-100 rounded-full p-3">
-              <input
-                type="text"
-                placeholder="Tanya MalangBot"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="flex-grow bg-transparent outline-none text-gray-800 px-4"
+          <div className="flex items-center bg-gray-100 rounded-full p-3">
+            <button 
+              onClick={handleVoiceInput} 
+              className={`ml-2 p-0 rounded-full ${isListening ? 'bg-blue-500' : ''}`}
+            >
+              <img 
+                src={voice}
+                alt="voice"
+                className={`w-8 h-8 ${isListening ? 'animate-pulse' : ''}`}
               />
-              <button onClick={() => handleSend()} className="text-gray-400 hover:text-gray-600">
-                <FaPaperPlane className="text-xl" />
-              </button>
-            </div>
+            </button>
+            <input
+              type="text"
+              placeholder="Tanya MalangBot"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="flex-grow bg-transparent outline-none text-gray-800 px-4"
+            />
+            <button onClick={() => handleSend()} className="text-gray-400 hover:text-gray-600">
+              <FaPaperPlane className="text-xl" />
+            </button>
           </div>
+        </div>
         )}
       </div>
     </div>
