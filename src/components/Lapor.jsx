@@ -7,63 +7,80 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import Navbar from './Navbar';
 import LaporToast from './LaporToast';
 import Terkirim from './Terkirim';
+import { auth } from '../firebase';
 import Voice from '../../public/images/voice.svg';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
 const Lapor = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showToaster, setShowToaster] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
   const [deskripsiValue, setDeskripsiValue] = useState('');
   const [isDeskripsiListening, setIsDeskripsiListening] = useState(false);
 
-
   const topikOptions = [
-    'Fasilitas dan Infrastruktur Publik',
-    'Administrasi dan Layanan Publik',
-    'Keuangan dan Bantuan Sosial',
-    'Pendidikan',
-    'Kesehatan',
-    'Lingkungan',
-    'Keamanan dan Ketertiban',
-    'Sosial dan Kependudukan',
-    'Hukum dan HAM',
-    'Aksesibilitas dan Disabilitas',
-    'Digital dan Teknologi',
-    'Saran dan Apresiasi'
+    { id: 3, label: 'Fasilitas dan Infrastruktur Publik' },
+    { id: 7, label: 'Administrasi dan Layanan Publik' },
+    { id: 5, label: 'Keuangan dan Bantuan Sosial' },
+    { id: 2, label: 'Pendidikan' },
+    { id: 1, label: 'Kesehatan' },
+    { id: 6, label: 'Lingkungan' },
+    { id: 4, label: 'Keamanan dan Ketertiban' },
+    { id: 5, label: 'Sosial dan Kependudukan' },
+    { id: null, label: 'Hukum dan HAM' },
+    { id: null, label: 'Aksesibilitas dan Disabilitas' },
+    { id: null, label: 'Digital dan Teknologi' },
+    { id: null, label: 'Saran dan Apresiasi' },
   ];
 
-  const {
-    transcript: nameTranscript,
-    listening: nameListening,
-    resetTranscript: resetNameTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  const { transcript: nameTranscript, listening: nameListening, resetTranscript: resetNameTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
-  const {
-    transcript: descriptionTranscript,
-    listening: descriptionListening,
-    resetTranscript: resetDescriptionTranscript,
-  } = useSpeechRecognition();
-  
+  const { transcript: descriptionTranscript, listening: descriptionListening, resetTranscript: resetDescriptionTranscript } = useSpeechRecognition();
+
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const namaPelapor = e.target.namaPelapor.value;
+    const topikLaporan = selectedTopic?.id;
     const deskripsiLaporan = e.target.deskripsiLaporan.value;
+    const topikDipilih = selectedTopic?.label;
 
-    if (namaPelapor && selectedTopic && deskripsiLaporan) {
-      setShowToaster(true);
-      setIsSubmitted(true);
+    if (namaPelapor && topikLaporan && deskripsiLaporan) {
+      try {
+        const response = await fetch('http://localhost:6834/api/createReport', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            description: deskripsiLaporan,
+            kedinasan_id: topikLaporan,
+            user_id: auth.currentUser?.uid, // atau user ID sebenarnya
+            topik: topikDipilih,
+          }),
+        });
 
-      setTimeout(() => {
-        setShowToaster(false);
-      }, 2000);
+        const result = await response.json();
+
+        if (response.ok) {
+          console.log('Report created:', result.data);
+          setShowToaster(true);
+          setTimeout(() => {
+            setShowToaster(false);
+          }, 2000);
+          setIsSubmitted(true);
+        } else {
+          alert(result.status.message || 'Gagal membuat laporan.');
+        }
+      } catch (error) {
+        console.error('Error submitting report:', error);
+        alert('Terjadi kesalahan saat mengirim laporan.');
+      }
     } else {
       alert('Harap isi semua kolom.');
     }
@@ -74,77 +91,76 @@ const Lapor = () => {
       setInputValue(nameTranscript);
     }
   }, [nameTranscript, isListening]);
-  
+
   useEffect(() => {
     if (descriptionTranscript && isDeskripsiListening) {
       setDeskripsiValue(descriptionTranscript);
     }
   }, [descriptionTranscript, isDeskripsiListening]);
-  
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
 
   const handleSend = async () => {
-    if (input.trim() === "" || isWaiting) return;
+    if (input.trim() === '' || isWaiting) return;
 
     const userMessage = {
-      type: "user",
+      type: 'user',
       content: input.trim(),
     };
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setInput("");
+    setInput('');
     setIsWaiting(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/chat", {
-        method: "POST",
+      const response = await fetch('http://localhost:6834/api/createReport', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ message: userMessage.content }),
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
 
       const data = await response.json();
-      
+
       const botMessage = {
-        type: "bot",
+        type: 'bot',
         content: data.response,
       };
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error);
       const errorMessage = {
-        type: "bot",
-        content: "Maaf, terjadi kesalahan. Silakan coba lagi nanti.",
+        type: 'bot',
+        content: 'Maaf, terjadi kesalahan. Silakan coba lagi nanti.',
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
       setIsWaiting(false);
     }
   };
-  
+
   const handleVoiceInput = () => {
     if (!browserSupportsSpeechRecognition) {
       alert('Browser tidak mendukung speech recognition.');
       return;
     }
-  
+
     if (!nameListening) {
       resetNameTranscript();
-      SpeechRecognition.startListening({ 
+      SpeechRecognition.startListening({
         continuous: true,
-        language: 'id-ID' 
+        language: 'id-ID',
       });
       setIsListening(true);
     } else {
@@ -152,19 +168,19 @@ const Lapor = () => {
       setIsListening(false);
       setInputValue(nameTranscript);
     }
-  };  
-  
+  };
+
   const handleDeskripsiVoiceInput = () => {
     if (!browserSupportsSpeechRecognition) {
       alert('Browser tidak mendukung speech recognition.');
       return;
     }
-  
+
     if (!descriptionListening) {
       resetDescriptionTranscript();
-      SpeechRecognition.startListening({ 
+      SpeechRecognition.startListening({
         continuous: true,
-        language: 'id-ID' 
+        language: 'id-ID',
       });
       setIsDeskripsiListening(true);
     } else {
@@ -172,7 +188,7 @@ const Lapor = () => {
       setIsDeskripsiListening(false);
       setDeskripsiValue(descriptionTranscript);
     }
-  };  
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-16 px-4">
@@ -185,7 +201,9 @@ const Lapor = () => {
               <div className="flex flex-col md:flex-row md:space-x-8 text-left">
                 <div className="flex flex-col w-full md:w-1/2 space-y-4">
                   <div className="flex flex-col">
-                    <label htmlFor="namaPelapor" className="text-lg font-semibold">Nama Pelapor</label>
+                    <label htmlFor="namaPelapor" className="text-lg font-semibold">
+                      Nama Pelapor
+                    </label>
                     <div className="relative mt-2">
                       <input
                         type="text"
@@ -196,18 +214,8 @@ const Lapor = () => {
                         onChange={(e) => setInputValue(e.target.value)}
                         className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-green-200 pr-12"
                       />
-                      <button 
-                        type="button"
-                        onClick={handleVoiceInput} 
-                        className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 ${
-                          isListening ? 'bg-blue-100' : ''
-                        }`}
-                      >
-                        <img 
-                          src={Voice}
-                          alt="voice"
-                          className={`w-6 h-6 ${isListening ? 'animate-pulse' : ''}`}
-                        />
+                      <button type="button" onClick={handleVoiceInput} className={`absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 ${isListening ? 'bg-blue-100' : ''}`}>
+                        <img src={Voice} alt="voice" className={`w-6 h-6 ${isListening ? 'animate-pulse' : ''}`} />
                       </button>
                     </div>
                   </div>
@@ -216,25 +224,17 @@ const Lapor = () => {
                     <label className="text-lg font-semibold">Topik Laporan</label>
                     <Menu as="div" className="relative inline-block text-left w-full">
                       <Menu.Button className="inline-flex w-full justify-between gap-x-1.5 rounded-lg bg-white p-3 text-m font-medium border border-gray-300 hover:bg-gray-50">
-                        <span className={selectedTopic ? 'text-gray-900' : 'text-gray-400'}>
-                          {selectedTopic || 'Pilih Topik Laporan'}
-                        </span>
+                        <span className={selectedTopic ? 'text-gray-900' : 'text-gray-400'}>{selectedTopic ? selectedTopic.label : 'Pilih Topik Laporan'}</span>
                         <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
                       </Menu.Button>
 
                       <Menu.Items className="absolute left-0 z-10 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <div className="py-1">
                           {topikOptions.map((topic) => (
-                            <Menu.Item key={topic}>
+                            <Menu.Item key={topic.label}>
                               {({ active }) => (
-                                <button
-                                  type="button"
-                                  className={`${
-                                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } block px-4 py-2 text-sm w-full text-left`}
-                                  onClick={() => setSelectedTopic(topic)}
-                                >
-                                  {topic}
+                                <button type="button" className={`${active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'} block px-4 py-2 text-sm w-full text-left`} onClick={() => setSelectedTopic(topic)}>
+                                  {topic.label}
                                 </button>
                               )}
                             </Menu.Item>
@@ -246,7 +246,9 @@ const Lapor = () => {
                 </div>
 
                 <div className="flex flex-col w-full md:w-1/2 mt-4 sm:mt-0">
-                  <label htmlFor="deskripsiLaporan" className="text-lg font-semibold">Deskripsi Laporan</label>
+                  <label htmlFor="deskripsiLaporan" className="text-lg font-semibold">
+                    Deskripsi Laporan
+                  </label>
                   <div className="relative mt-2">
                     <textarea
                       id="deskripsiLaporan"
@@ -257,29 +259,15 @@ const Lapor = () => {
                       rows="12"
                       className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-green-200 pr-12"
                     />
-                    <button 
-                      type="button"
-                      onClick={handleDeskripsiVoiceInput} 
-                      className={`absolute right-2 top-4 transform pr-2p-0 rounded-full hover:bg-gray-100 ${
-                        isDeskripsiListening ? 'bg-blue-100' : ''
-                      }`}
-                    >
-                      <img 
-                        src={Voice}
-                        alt="voice"
-                        className={`w-6 h-6 ${isDeskripsiListening ? 'animate-pulse' : ''}`}
-                      />
+                    <button type="button" onClick={handleDeskripsiVoiceInput} className={`absolute right-2 top-4 transform pr-2p-0 rounded-full hover:bg-gray-100 ${isDeskripsiListening ? 'bg-blue-100' : ''}`}>
+                      <img src={Voice} alt="voice" className={`w-6 h-6 ${isDeskripsiListening ? 'animate-pulse' : ''}`} />
                     </button>
                   </div>
                 </div>
-
               </div>
 
               <div className="flex justify-start">
-                <button
-                  type="submit"
-                  className="py-3 px-10 md:-mt-12 bg-biruNgalam text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
-                >
+                <button type="submit" className="py-3 px-10 md:-mt-12 bg-biruNgalam text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
                   Submit
                 </button>
               </div>
@@ -288,9 +276,7 @@ const Lapor = () => {
         </div>
       )}
 
-      {showToaster && (
-        <LaporToast message="Laporan Berhasil dibuat." onClose={() => setShowToaster(false)} />
-      )}
+      {showToaster && <LaporToast message="Laporan Berhasil dibuat." onClose={() => setShowToaster(false)} />}
     </div>
   );
 };
