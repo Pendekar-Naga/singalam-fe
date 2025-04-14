@@ -1,7 +1,23 @@
-# Singalam Frontend - Tim Pendekar Naga
+# Singalam Frontend - Pendekar Naga Hackathon Project 2025 🐉
+
+## Team Members
+alkaalvinn - Alka Alvin Fauzi
+Tegarsetyo6 - Tegar Setyo Wicaksono
+nadhirul24 - Nadhirul Fatah Ulhaq
 
 ## Introduction
-Singalam is a frontend application built with modern web technologies to provide an interactive and responsive user interface.
+SINGALAM (Sistem Informasi dan Gerakan Layanan Kota Malang) is an inclusive, AI-powered public complaint platform built to ensure that every citizen—including those with disabilities—can access public services independently and effectively.
+With a voice-first interface, real-time AI chatbot, and transparent report tracking, SINGALAM bridges the gap between public service access and digital inclusivity, especially for the visually impaired in Malang City.
+
+💡 Key Features
+🗣️ Voice-Guided Interface: Navigate every page with built-in voice instructions, designed for screen reader compatibility.
+🤖 MalangBot – AI Chatbot: Instant responses to public service-related questions using RAG-based chatbot technology.
+📄 Inclusive Complaint Form: Submit reports using either speech or text input, accessible and efficient for all users.
+🔍 Complaint History Tracking: Keep users updated with real-time report status and responses from the authorities.
+♿ Accessibility-First Design: High color contrast, keyboard navigation, and screen reader support built-in.
+
+🌐 Access Prototype
+Try our prototype here: bit.ly/PrototypeSINGALAM
 
 ## Tech Stack
 React
@@ -56,11 +72,6 @@ Contributing
 3. Commit your changes (git commit -m 'Add some amazing feature')
 4. Push to the branch (git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## Team Members
-alkaalvinn - Alka Alvin Fauzi
-Tegarsetyo6 - Tegar Setyo Wicaksono
-nadhirul24 - Nadhirul Fatah Ulhaq
 
 ## Languages Used
 JavaScript: 90.3%
