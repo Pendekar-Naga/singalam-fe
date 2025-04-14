@@ -1,20 +1,20 @@
 # Singalam Frontend - Pendekar Naga Hackathon Project 2025 🐉
 
 ## Team Members
-alkaalvinn - Alka Alvin Fauzi
-Tegarsetyo6 - Tegar Setyo Wicaksono
-nadhirul24 - Nadhirul Fatah Ulhaq
+alkaalvinn - Alka Alvin Fauzi <br>
+Tegarsetyo6 - Tegar Setyo Wicaksono <br>
+nadhirul24 - Nadhirul Fatah Ulhaq <br>
 
 ## Introduction
-SINGALAM (Sistem Informasi dan Gerakan Layanan Kota Malang) is an inclusive, AI-powered public complaint platform built to ensure that every citizen—including those with disabilities—can access public services independently and effectively.
+SINGALAM (Sistem Informasi dan Gerakan Layanan Kota Malang) is an inclusive, AI-powered public complaint platform built to ensure that every citizen—including those with disabilities—can access public services independently and effectively.<br>
 With a voice-first interface, real-time AI chatbot, and transparent report tracking, SINGALAM bridges the gap between public service access and digital inclusivity, especially for the visually impaired in Malang City.
 
-💡 Key Features
-🗣️ Voice-Guided Interface: Navigate every page with built-in voice instructions, designed for screen reader compatibility.
-🤖 MalangBot – AI Chatbot: Instant responses to public service-related questions using RAG-based chatbot technology.
-📄 Inclusive Complaint Form: Submit reports using either speech or text input, accessible and efficient for all users.
-🔍 Complaint History Tracking: Keep users updated with real-time report status and responses from the authorities.
-♿ Accessibility-First Design: High color contrast, keyboard navigation, and screen reader support built-in.
+## 💡 Key Features
+🗣️ Voice-Guided Interface: Navigate every page with built-in voice instructions, designed for screen reader compatibility.<br>
+🤖 MalangBot – AI Chatbot: Instant responses to public service-related questions using RAG-based chatbot technology.<br>
+📄 Inclusive Complaint Form: Submit reports using either speech or text input, accessible and efficient for all users.<br>
+🔍 Complaint History Tracking: Keep users updated with real-time report status and responses from the authorities.<br>
+♿ Accessibility-First Design: High color contrast, keyboard navigation, and screen reader support built-in.<br>
 
 🌐 Access Prototype
 Try our prototype here: bit.ly/PrototypeSINGALAM
@@ -58,10 +58,10 @@ yarn dev
 `
 
 ## Development Features
-React with TypeScript for type safety
-Styling with Tailwind CSS
-Code quality maintenance with ESLint
-Hot Module Replacement (HMR) for fast development
+React with TypeScript for type safety<br>
+Styling with Tailwind CSS<br>
+Code quality maintenance with ESLint<br>
+Hot Module Replacement (HMR) for fast development<br>
 
 ## Deployment
 The application is deployed on Vercel at: singalam-fe.vercel.app
