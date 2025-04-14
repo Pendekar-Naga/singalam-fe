@@ -144,9 +144,7 @@ const Chatbot = () => {
     <div className="flex flex-col h-screen bg-white">
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
         {messages.length === 0 ? (
-          // Initial view when no messages
           <div className="flex-1 flex flex-col items-center justify-center">
-            {/* Updated header with horizontally aligned icon and text */}
             <div className="flex items-center justify-center gap-4 mb-4">
               <img src="/images/chatbot.png" alt="Chatbot Icon" className="w-16 h-16" />
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Ada yang bisa dibantu?</h1>
@@ -192,7 +190,7 @@ const Chatbot = () => {
             </div>
           </div>
         ) : (
-          // Chat view when there are messages
+
           <div className="flex-1 flex flex-col pt-4 mt-20">
             <div className="flex-1 overflow-y-auto" ref={chatContainerRef}>
               {messages.map((message, index) => (
@@ -202,7 +200,9 @@ const Chatbot = () => {
                       ? "bg-blue-600 text-white rounded-br-none" 
                       : "bg-gray-100 text-gray-800 rounded-bl-none"
                   }`}>
-                    <span dangerouslySetInnerHTML={parseMarkdown(message.content)} />
+                    <div className="text-left">
+                      <span dangerouslySetInnerHTML={parseMarkdown(message.content)} />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -218,7 +218,6 @@ const Chatbot = () => {
           </div>
         )}
 
-        {/* Input field always at bottom when there are messages */}
         {messages.length > 0 && (
           <div className="sticky bottom-0 bg-white py-4">
           <div className="flex items-center bg-gray-100 rounded-full p-3">
