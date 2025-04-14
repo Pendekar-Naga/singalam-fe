@@ -202,7 +202,9 @@ const Chatbot = () => {
                       ? "bg-blue-600 text-white rounded-br-none" 
                       : "bg-gray-100 text-gray-800 rounded-bl-none"
                   }`}>
-                    <span dangerouslySetInnerHTML={parseMarkdown(message.content)} />
+                    <div className="text-left">
+                      <span dangerouslySetInnerHTML={parseMarkdown(message.content)} />
+                    </div>
                   </div>
                 </div>
               ))}
