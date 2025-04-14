@@ -20,11 +20,11 @@ With a voice-first interface, real-time AI chatbot, and transparent report track
 Try our prototype here: bit.ly/PrototypeSINGALAM
 
 ## Tech Stack
-React
-Vite
-TypeScript
-Tailwind CSS
-ESLint
+React<br>
+Vite<br>
+TypeScript<br>
+Tailwind CSS<br>
+ESLint<br>
 
 ## Getting Started
 
