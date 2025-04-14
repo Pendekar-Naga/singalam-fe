@@ -1,22 +1,22 @@
-Singalam Frontend
+# Singalam Frontend - Tim Pendekar Naga
 
-This repository contains the frontend application for Singalam, built with React and Vite.
+## Introduction
+Singalam is a frontend application built with modern web technologies to provide an interactive and responsive user interface.
 
-Tech Stack
+## Tech Stack
 React
 Vite
 TypeScript
 Tailwind CSS
 ESLint
 
-Getting Started
+## Getting Started
 
 Prerequisites
 Node.js (latest LTS version recommended)
 npm or yarn
 
-Installation
-
+## Installation
 1. Clone the repository
 ``bash
 git clone https://github.com/Pendekar-Naga/singalam-fe.git
@@ -41,30 +41,32 @@ or
 yarn dev
 `
 
-Development
-The project uses React with TypeScript for type safety
-Styling is handled with Tailwind CSS
-Code quality is maintained with ESLint
-Hot Module Replacement (HMR) is enabled for fast development
+## Development Features
+React with TypeScript for type safety
+Styling with Tailwind CSS
+Code quality maintenance with ESLint
+Hot Module Replacement (HMR) for fast development
 
-Deployment
-
+## Deployment
 The application is deployed on Vercel at: singalam-fe.vercel.app
 
 Contributing
-
 1. Fork the repository
 2. Create your feature branch (git checkout -b feature/amazing-feature)
 3. Commit your changes (git commit -m 'Add some amazing feature')
 4. Push to the branch (git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-License
+## Team Members
+alkaalvinn - Alka Alvin Fauzi
+Tegarsetyo6 - Tegar Setyo Wicaksono
+nadhirul24 - Nadhirul Fatah Ulhaq
 
-This project is licensed under the MIT License - see the LICENSE file for details
+## Languages Used
+JavaScript: 90.3%
+TypeScript: 6.4%
+CSS: 2.6%
+HTML: 0.7%
 
-Contributors
-alkaalvinn
-Tegarsetyo6 (Tegar Setyo W)
-
-Would you like me to elaborate on any part of this README?
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
