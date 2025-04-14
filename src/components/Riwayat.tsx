@@ -53,6 +53,7 @@ const Riwayat = () => {
     { title: 'Status', data: 'status' },
     { title: 'Tanggal Dibuat', data: 'created_at' },
     { title: 'Nama Dinas', data: 'nama_dinas' },
+    { title: 'Topik', data: 'topik' },
   ];
 
   return (
@@ -82,7 +83,19 @@ const Riwayat = () => {
                     <tr key={rowIndex} className="hover:bg-gray-50 transition duration-150 ease-in-out">
                       {columns.map((column, colIndex) => (
                         <td key={colIndex} className="px-4 py-3 text-sm text-gray-700">
-                          {column.data === 'created_at' ? formatDate(row[column.data]) : row[column.data]}
+                          {column.data === 'created_at' ? (
+                            formatDate(row[column.data])
+                          ) : column.data === 'status' ? (
+                            <span
+                              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                row.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : row.status === 'diterima' ? 'bg-green-100 text-green-800' : row.status === 'ditolak' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                              }`}
+                            >
+                              {row.status}
+                            </span>
+                          ) : (
+                            row[column.data]
+                          )}
                         </td>
                       ))}
                     </tr>
