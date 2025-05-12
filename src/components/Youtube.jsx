@@ -8,7 +8,7 @@ export default function Youtube() {
             <div className="mx-auto max-w-7xl px-6 sm:py-8 lg:flex lg:items-center lg:gap-x-10 lg:px-8 bg-bannerBiru rounded-xl pb-16">
                 <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow ">
                     <iframe className="rounded-xl w-full h-60 aspect-video"
-                    src="https://www.youtube.com/embed/LLFhKaqnWwk?autoplay=1">
+                    src="https://player.vimeo.com/video/1083470515?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479">
                     </iframe>
                 </div>
                 <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto mt-10 sm:mt-0">
